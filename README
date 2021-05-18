@@ -1,0 +1,4 @@
+# espInfluxSensor
+
+Grab sensor values from an ESP8266 running MicroPython and punt them into an
+InfluxDB database.
