@@ -12,7 +12,9 @@ SSID = os.environ["SSID"]
 PASS = os.environ["PASSWORD"]
 
 parser = argparse.ArgumentParser()
-parser.add_argument("-l", help="Location of sensor", required=True, nargs=1, action="store", type=str)
+parser.add_argument("-l", help="Location of sensor", required=True, action="store", type=str)
+parser.add_argument("-m", help="InfluxDB Metric Name", required=True, type=str, action="store")
+parser.add_argument("-d", help="InfluxDB DB Name", required=True, type=str, action="store")
 parser.add_argument("-f", help="Flash main.py and settings.py to ESP", required=False, action="store_true")
 parser.add_argument("-s", help="Serial Port", type=str, default="/dev/tty/USB0", required=False)
 parser.add_argument("-b", help="Baud rate", type=str, default=str(115200), required=False)
@@ -24,7 +26,10 @@ settings_file = (
         f"PORT = '{PORT}'\n"
         f"SSID = '{SSID}'\n"
         f"PASS = '{PASS}'\n"
-        f"LOCATION = '{args.l[0]}'\n")
+        f"LOCATION = '{args.l}'\n"
+        f"METRICNAME = 'args.m'\n"
+        f"DBNAME =  'args.d'\n")
+
 
 
 with open("src/settings.py", "w") as settings:
