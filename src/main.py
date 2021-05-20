@@ -88,4 +88,4 @@ while True:
                 metric_name=settings.METRICNAME, location=settings.LOCATION, value=str(float(sensors.get_temperature()))
                 )
             )
-    deep_sleep(10)
+    deep_sleep(settings.INTERVAL)
