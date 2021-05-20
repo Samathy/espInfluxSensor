@@ -15,10 +15,13 @@ class DSInfo:
         print(self.roms)
 
     def get_temperature(self):
+        print("Getting temp")
         if self.roms:
+            print("Returning actual value")
             self.ds_sensor.convert_temp()
             return self.ds_sensor.read_temp(self.roms[0]) # We're only going to have one sensor per-board
         else:
+            print("Returning 0")
             return 0
 
 
@@ -38,11 +41,21 @@ def wifi_setup():
         
 
 def http_post(host, port, path, auth_token, data):
-    print("Sending http request")
+    print("Sending http request to %s:%s".format(host, port))
     addr = socket.getaddrinfo(host, port)[0][-1]
     s = socket.socket()
     s.connect(addr)
-    print("Sending bytes...:"+str(s.send(bytes('POST /%s HTTP/1.1\r\nHost: /%s\r\nAuthorization: Token /%s\r\nContent-Length: /%s\r\nContent Type: application/x-www-form-urlencoded\r\n\r\n /%s'.format(path, host+":"+port, auth_token, str(len(data)), data)))))
+    request = 'POST {path} HTTP/1.1\r\nHost: {host}:{port}\r\nAuthorization: Token {token}\r\nContent-Length: {content_length}\r\nContent-Type: application/x-www-form-urlencoded\r\n\r\n {data}'.format(
+        path=path, host=host, port=str(port), token=auth_token, content_length=str(len(data)), data=str(data))
+    print(request)
+
+    print("Sending bytes...:"+str(
+        s.send(
+            bytes(request, "utf-8"
+                )
+            )
+        )
+        )
     print("Waiting to receive bytes")
     while True:
         recieved = s.recv(100)
@@ -60,5 +73,15 @@ interface = wifi_setup()
 sensors = DSInfo()
 
 while True:
-    http_post(settings.HOST, settings.PORT, "/api/v2/write/?bucket=/%s&precision=s".format(settings.DBNAME), settings.INFLUXUSR+":"+settings.INFLUXPASSWD, "/%s, location=/%s, value=/%s".format(settings.METRICNAME, settings.LOCATION, sensors.get_temperature()))
+    http_post(
+            settings.HOST, 
+            settings.PORT, 
+            "/api/v2/write/?bucket={bucket}&precision=s".format(
+                bucket=settings.DBNAME
+            ), 
+            settings.INFLUXUSR+":"+settings.INFLUXPASSWD, 
+            "{metric_name}, location={location}, value={value}".format(
+                metric_name=settings.METRICNAME, location=settings.LOCATION, value=sensors.get_temperature()
+                )
+            )
     deep_sleep(10)
