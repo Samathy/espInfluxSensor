@@ -80,12 +80,12 @@ while True:
     http_post(
             settings.HOST, 
             settings.PORT, 
-            "/api/v2/write/?bucket={bucket}&precision=s".format(
+            "/api/v2/write?bucket={bucket}&precision=s".format(
                 bucket=settings.DBNAME
             ), 
             settings.INFLUXUSR+":"+settings.INFLUXPASSWD, 
-            "{metric_name}, location={location}, value={value}".format(
-                metric_name=settings.METRICNAME, location=settings.LOCATION, value=sensors.get_temperature()
+            "{metric_name},location={location} value={value}".format(
+                metric_name=settings.METRICNAME, location=settings.LOCATION, value=str(float(sensors.get_temperature()))
                 )
             )
     deep_sleep(10)
