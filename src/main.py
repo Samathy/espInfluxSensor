@@ -61,6 +61,7 @@ def http_post(host, port, path, auth_token, data):
         recieved = s.recv(100)
         if recieved:
             print(str(recieved, 'utf8'), end='')
+            break
         else:
             break
     s.close()
