@@ -2,3 +2,12 @@
 
 Grab sensor values from an ESP8266 running MicroPython and punt them into an
 InfluxDB database.
+
+Requirements:
+    adafuit-ampy
+
+
+Currently the code in src/main.py is for reading a temperature sensor, but modifying to use a different sensor
+would be trivial.
+The deep-sleep method is unimplemented at the moment.
+
