@@ -32,7 +32,7 @@ def wifi_setup():
         print("No interface connected")
         interface.active(True)
         interface.connect(settings.SSID, settings.PASS)
-        time.sleep(4)
+        time.sleep(10)
         if not interface.isconnected():
             print("Unable to connect to WiFi "+ str(interface.status()))
         print("WiFi connected to "+settings.SSID)
@@ -70,6 +70,9 @@ def deep_sleep(seconds):
     time.sleep(10)
 
 interface = wifi_setup()
+while interface.status() != 5:
+    interface = wifi_setup()
+
 sensors = DSInfo()
 
 while True:
